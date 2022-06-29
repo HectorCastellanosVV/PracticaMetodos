@@ -1,0 +1,2022 @@
+﻿MÉTODOS NUMÉRICOS
+REPORTE DE PRACTICA
+CÓDIGOS EN PYTHON
+Por: Castellanos Velasquez Hector
+        Leon Pacheco Cristian Irving
+               Ramirez Jacinto Reyna Mbelgui Nani
+               Robles García Jovani Daniel
+       
+  
+
+  
+
+Introducción
+De antemano le agradecemos por pasarnos en esta materia, en la que a continuación le mostraremos los ejercicios acompañados de una descripción explicando para qué sirve cada método, los pasos que seguimos y una breve explicación de cada código elaborado en Python. 
+Python es un lenguaje de programación de alto nivel que se utiliza para desarrollar aplicaciones de todo tipo. A diferencia de otros lenguajes como Java o .NET, se trata de un lenguaje interpretado, es decir, que no es necesario compilarlo para ejecutar las aplicaciones escritas en Python, sino que se ejecutan directamente por el ordenador utilizando un programa denominado interpretador, por lo que no es necesario “traducirlo” a lenguaje máquina. 
+
+
+1. Sistemas de ecuaciones lineales.
+a) Método de Gauss.
+El Método de Gauss consiste en transformar un sistema de ecuaciones lineal en otro escalonado de manera que en cada ecuación tengamos una incógnita menos que en la ecuación precedente.
+
+
+Si nuestro sistema no es un sistema escalonado, lo podemos resolver mediante el método de Gauss. El método consiste en  “hacemos cero”, es decir, sometemos a las ecuaciones a transformaciones elementales:
+
+
+-Ponemos como primera ecuación la que tenga el como coeficiente de x: 1 ó -1, en caso de que no fuera posible lo haremos con y o z, cambiando el orden de las incógnitas.
+
+
+-Hacemos reducción con la 1ª y 2ª ecuación, para eliminar el término en x de la 2ª ecuación. Después ponemos como segunda ecuación el resultado de la
+operación
+
+
+-Hacemos lo mismo con la ecuación 1ª y 3ª ecuación, para eliminar el término en x.
+
+
+-Tomamos las ecuaciones 2ª y 3ª, transformadas, para hacer reducción y eliminar el término en y.
+
+
+-Obtenemos el sistema equivalente escalonado.
+
+
+-Encontrar las soluciones.
+
+
+  
+
+	# eliminación hacia adelante
+for i in range(0,n-1,1):
+    pivote   = AB[i,i]
+    adelante = i + 1
+    for k in range(adelante,n,1):
+        factor  = AB[k,i]/pivote
+        AB[k,:] = AB[k,:] - AB[i,:]*factor
+ 
+# sustitución hacia atrás
+ultfila = n-1
+ultcolumna = m-1
+X = np.zeros(n,dtype=float)
+ 
+for i in range(ultfila,0-1,-1):
+    suma = 0
+    for j in range(i+1,ultcolumna,1):
+        suma = suma + AB[i,j]*X[j]
+    b = AB[i,ultcolumna]
+    X[i] = (b-suma)/AB[i,i]
+X = np.transpose([X])
+# SALIDA
+print('Matriz aumentada:')
+print(AB0)
+print('Pivoteo parcial por filas')
+print(AB1)
+print('eliminación hacia adelante')
+print(AB)
+print('solución: ')
+print(X)
+
+
+	
+
+b) Factorización LU y PLU.
+Teorema
+Sea A una matriz cuadrada de nxn. Supongamos que A se puede reducir por
+las a una matriz triangular superior, U aplicando operaciones elementales.
+Entonces existe un matriz triangular inferior L que es invertible y posee unos
+en su diagonal principal, tal que
+A = LU
+Se llama factorización PLU de A si las matrices P; L; U cumplen que:PA = LU Donde:U es una matriz triangular superior con elementos diagonales no nulos L es una matriz triangular inferior con elementos diagonales iguales a 1P es una matriz de permutación
+  
+  
+
+Producto escalar de dos matrices. Específicamente,
+
+
+Si tanto a como b son matrices 1-D, es un producto interno de vectores (sin conjugación compleja).
+
+
+Si tanto a como b son matrices bidimensionales, se trata de una multiplicación de matrices, pero se prefiere usar matmulo .a @ b
+
+
+Si aob es 0-D ( escalar), es equivalente y se prefiere multiply usar o .numpy.multiply(a, b)a * b
+
+
+Si a es una matriz ND y b es una matriz 1-D, es un producto de suma sobre el último eje de a y b .
+
+
+Si a es una matriz ND y b es una matriz MD (donde M>=2), es un producto de suma sobre el último eje de a y el penúltimo eje de b.
+
+
+Parámetros
+una matriz como Primer argumento.
+
+
+b array_like Segundo argumento.
+
+
+fuera de ndarray, opcional
+Argumento de salida. Este debe tener el tipo exacto que sería devuelto si no se usara. En particular, debe tener el tipo correcto, debe ser C-contiguo y su dtype debe ser el dtype que se devolvería para dot(a,b) . Esta es una característica de rendimiento. Por lo tanto, si no se cumplen estas condiciones, se plantea una excepción, en lugar de intentar ser flexible.
+
+
+Devoluciones
+ndarray de salida
+Devuelve el producto escalar de ay b . Si a y b son ambos escalares o ambas matrices 1-D, se devuelve un escalar; de lo contrario, se devuelve una matriz. Si se da out , entonces se devuelve.
+
+
+aumenta
+ValorError
+Si la última dimensión de a no tiene el mismo tamaño que la penúltima dimensión de b .  
+
+
+	#Factorización por LU
+import numpy as np
+#Primero inicializamos con ceros
+print("Descomposición LU, matrices cuadradas")
+m=int(input("Introduce el número de renglones: "))
+matriz=np.zeros([m,m])
+u=np.zeros([m,m])
+l=np.zeros([m,m])
+print("Introduce los elementos de la matriz")
+for r in range(0,m):
+    for c in range(0,m):
+        matriz[r,c]=(input("Elemento a "+str(r+1)+","+str(c+1)+""))
+        matriz[r,c]=float(matriz[r,c])
+        u[r,c]=matriz[r,c]
+#Operaciones para hacer ceros debajo de la diagonal principal
+for k in range(0,m):
+    for r in range(0,m):
+        if(k==r):
+            l[k,r]=1
+        if(k<r):
+            factor=(matriz[r,k]/matriz[k,k])
+            l[r,k]=factor
+            for c in range(0,m):
+                matriz[r,c]=matriz[r,c]-(factor*matriz[k,c])
+                u[r,c]=matriz[r,c]
+print("Impresion de resultados")
+print("Matriz L")
+print(l)
+
+
+print("Matriz U")
+print(u)        
+#Comprobación
+matrizr=np.zeros([m,m])
+for r in range(0,m):
+    for c in range(0,m):
+        for k in range(0,m):
+            matrizr[r,c] += (l[r,k]*u[k,c])
+print(matrizr)
+a=np.dot(l,u)
+print(a)
+
+
+
+
+	c) Inversa de una matriz.
+En el álgebra matricial, la división no está definida. La inversión de matrices es la contraparte de la división en álgebra.
+
+
+La inversa de una matriz está definida como aquella matriz, que multiplicada por la original da por resultado la matriz identidad, se denota como A^(-1)
+
+
+El procedimiento para obtener la matriz inversa de una matriz  por el método de la adjunta es el siguiente:
+
+
+  
+
+  
+
+  
+
+
+
+La matriz inversa de una matriz  es igual a la matriz adjunta de su matriz traspuesta, dividida por su determinante, siempre que este no sea cero.
+
+
+Dada una matriz cuadrada a , devuelva la matriz ainv satisfactoria .dot(a, ainv) = dot(ainv, a) = eye(a.shape[0])
+
+
+Parámetros
+un (…, M, M) tipo matriz
+Matriz a invertir.
+
+
+Devoluciones
+ainv (…, M, M) ndarray o matriz
+(Multiplicativa) inversa de la matriz a .
+
+
+aumenta
+LinAlgError
+Si a no es cuadrado o falla la inversión.
+
+
+	import numpy as np
+
+
+
+
+m=int(input("Introduce el número de renglones: "))
+matriz=np.zeros([m,m])
+matrizf=np.zeros([m,m])
+u=np.zeros([m,m])
+l=np.zeros([m,m])
+
+
+print("Introduce los elementos de la matriz")
+for r in range(0,m):
+    for c in range(0,m):
+        matriz[r,c]=(input("Elemento a "+str(r+1)+","+str(c+1)+""))
+        matriz[r,c]=float(matriz[r,c])
+        u[r,c]=matriz[r,c]
+
+
+a=np.linalg.inv(matriz)
+
+
+
+
+
+
+print(matriz)
+print(a)
+
+
+  
+
+	
+
+d) Determinantes.
+El determinante de una matriz siempre es igual al de su matriz traspuesta. El determinante de una matriz será siempre cero (nulo) si la matriz contiene dos filas o columnas iguales, si los elementos de una fila o columna son todo ceros o si los elementos de una fila o columna son una combinación lineal de las demás.
+
+
+En NumPy, podemos calcular el determinante de la matriz cuadrada dada con la ayuda de numpy.linalg.det(). Tomará la matriz cuadrada dada como parámetro y devolverá el determinante de eso.
+
+
+Sintaxis: numpy.linalg.det() 
+Parámetro: Una matriz cuadrada. 
+Retorno: El determinante de esa matriz cuadrada.
+  
+
+	import numpy as np
+
+
+m=int(input("Introduce el número de renglones: "))
+matriz=np.zeros([m,m])
+u=np.zeros([m,m])
+l=np.zeros([m,m])
+
+
+print("Introduce los elementos de la matriz")
+for r in range(0,m):
+    for c in range(0,m):
+        matriz[r,c]=(input("Elemento a "+str(r+1)+","+str(c+1)+""))
+        matriz[r,c]=float(matriz[r,c])
+        u[r,c]=matriz[r,c]
+
+
+z=np.linalg.det(matriz)
+print(matriz)
+print(z)
+
+
+	
+
+e) Gauss Seidel.
+Existen varias técnicas que se pueden utilizar para resolver grandes números de ecuaciones simultáneas. Una de las técnicas más útiles es el método de Gauss-Seidel. Ninguno de los procedimientos alternos es totalmente satisfactorio, y el método de Gauss-Seidel tiene la desventaja de que no siempre converge a una solución o de que a veces converge muy lentamente. Sin embargo, este método converge siempre a una solución cuando la magnitud del coeficiente de una incógnita diferente en cada ecuación del conjunto, sea suficientemente dominante con respecto a las magnitudes de los otros coeficientes de esa ecuación.
+
+
+La secuencia de pasos que constituyen el método de Gauss-Seidel es la siguiente:
+
+
+1. Asignar un valor inicial a cada incógnita que aparezca en el conjunto. Si es posible hacer una hipótesis razonable de éstos valores, hacerla. Si no, se pueden asignar valores seleccionados arbitrariamente. Los valores iniciales utilizados no afectarán la convergencia como tal, pero afectarán el número de iteraciones requeridas para dicha convergencia.
+2. Partiendo de la primera ecuación, determinar un nuevo valor para la incógnita que tiene el coeficiente más grande en esa ecuación, utilizando para las otras incógnitas los valores supuestos.
+3. Pasar a la segunda ecuación y determinar en ella el valor de la incógnita que tiene el coeficiente más grande en esa ecuación, utilizando el valor calculado para la incógnita del paso 2 y los valores supuestos para las incógnitas restantes.
+4. Continuar con las ecuaciones restantes, determinando siempre el valor calculado de la incógnita que tiene el coeficniente más grande en cada ecuación particular, y utilizando siempre los últimos valores calculados para las otras incógnitas de la ecuación. (Durante la primera iteración, se deben utilizar los valores supuestos para las incógnitas hasta que se obtenga un valor calculado). Cuando la ecuación final ha sido resuelta, proporcionando un valor para la única incógnita, se dice que se ha completado una iteración.
+5. Continuar iterando hasta que el valor de cada incógnita, determinado en una iteración particular, difiera del valor obtenido en la iteración previa, en una cantidad menor que cierto
+
+
+	import numpy as np
+matriz=np.array([[3. ,-0.1,-0.2],[0.1, 7 ,-0.3],[0.3,-0.2,10]])
+matrizR=np.array([7.85,-19.3,71.4])
+X0=np.array([0.0,0,0])
+tolera=0.0001
+iteramax=100
+
+
+#PROCEDIMIENTO GAUSS-SEIDEL
+tamano=np.shape(matriz)
+n=tamano[0]
+m=tamano[1]
+
+
+#Valores Iniciales
+X=np.copy(X0)
+diferencia=np.ones(n,dtype=float)
+errado=2*tolera
+
+
+itera=0
+i=0
+while not(errado<=tolera or itera>iteramax):
+    for i in range(0,n,1):
+        suma=0
+        for j in range(0,n,1):
+            if(j != i):
+                suma=suma+matriz[i,j]*X[j]
+        nuevo=(matrizR[i]-suma)/matriz[i,i]
+        diferencia[i]=np.abs(nuevo-X[i])
+        X[i]=nuevo
+    errado=np.max(diferencia)
+    itera=itera+1
+#revisa convergencia
+if(itera>iteramax):
+    X=0
+
+
+
+
+print(X)
+  
+
+  
+
+	
+
+f ) Método de las potencias directa/inversa.
+En análisis numérico, el método de las potencias es un método iterativo que calcula sucesivas aproximaciones a los autovectores y autovalores de una matriz. El método converge lentamente y solo puede determinar uno de los autovectores de la matriz.
+El método se usa principalmente para calcular el autovector de mayor autovalor en matrices grandes. En particular, Google lo emplea para calcular el PageRank de los documentos en su motor de búsqueda.
+Para aplicar el método de las potencias se supone que la matriz A de n x n tiene n valores característicos   
+
+
+
+
+
+
+con un conjunto asociado de vectores característicos linealmente independientes   
+Es más, se supone que A tiene exactamente un valor característico
+   cuya magnitud es la mayor, por lo que   
+El método converge lentamente y solo puede determinar uno de los autovectores de la matriz.
+
+
+	from json import tool
+from operator import length_hint
+from re import X
+from turtle import end_fill
+
+
+
+
+function[u]=potencia(A,x,tol,max_iter)
+n=length(A);
+
+
+k=1;
+[xp,p]=max(abs(x))
+x /=x(p)
+while(k<=max_iter)
+    y=A*X
+    u=y(p)
+    [aux2,p]=max(abs(y))
+    if(y(p)==0):
+        display("vector propio",x);
+        display("Valor propio",0);
+        display("Estoy en un nuevo vector y reinicia");
+        return
+    endif
+
+
+    err=norm(x-(y/y(p)),inf)
+    x=y/y(p)
+
+
+    if err<tol:
+    k=k+1
+   display("el numero maximo de iteraciones fue excedido")
+
+
+	
+
+2. Ecuaciones no lineales.
+a) Método de bisección.
+Concepto : 
+El método se basa en el teorema del valor intermedio, conocido como método de la bisección.
+Es un tipo de búsqueda incremental en el que:
+* el intervalo se divide siempre en la mitad.
+* Si la función cambia de signo sobre un intervalo, se evalúa el valor de la función en el punto medio.
+* La posición de la raíz se determina en el punto medio del subintervalo, izquierdo o derecho,  dentro del cual ocurre un cambio de signo.
+* el proceso se repite hasta obtener una mejor aproximación  
+La gráfica muestra el proceso en forma animada, observe la forma en que progresivamente se acercan los puntos [a,b], donde se mantienen valores con signo diferente entre f(a) y f(b).
+Observamos la gráfica para una sola iteración y asi describir mejor el método.
+Para la primera iteración se tiene como procedimiento que la función tiene un cambio de signo en el intervalo [a,b].
+En intervalo se divide en la mitad, representado por el punto c, obteniendo el sub-intervalo izquierdo [a,c] o sub-intervalo derecho [c,b].
+El sub-intervalo que contiene la función con un cambio de signo, se convierte en el nuevo intervalo a ser analizado en la siguiente iteración
+
+
+	
+
+Ejemplo:
+La ecuación a realizar tiene una raíz en [1,2], ya que f(1)=-5 y f(2)=14 y existe cambio de signo.
+Mostrando los resultados parciales del algoritmo de la bisección con una tolerancia de 0.0001
+  
+
+Comenzando con las iteraciones tenemos: 
+  
+
+
+
+ cambio de signo a la izquierda
+  
+
+Iteración 2
+  
+
+
+
+
+
+
+
+Cambiando el signo a la derecha tenemos: 
+  
+
+Teniendo los siguientes resultados:
+  
+
+
+
+	Código:
+#Ecuaciones no lineales
+# Código de Bisección
+# [a,b] se escogen de la gráfica de la función
+# error = tolera
+import numpy as np
+
+
+# INGRESO
+fx = lambda x: x**3 + 4*x**2 - 10 
+a = 1
+b = 2
+tolera = 0.001
+
+
+# PROCEDIMIENTO
+tabla = []
+tramo = b-a
+
+
+fa = fx(a)
+fb = fx(b)
+i = 1
+while (tramo>tolera):
+    c = (a+b)/2
+    fc = fx(c)
+    tabla.append([i,a,c,b,fa,fc,fb,tramo])
+    i = i + 1
+                 
+    cambia = np.sign(fa)*np.sign(fc)
+    if (cambia<0):
+        b = c
+        fb = fc
+    else:
+        a=c
+        fa = fc
+    tramo = b-a
+c = (a+b)/2
+fc = fx(c)
+tabla.append([i,a,c,b,fa,fc,fb,tramo])
+tabla = np.array(tabla)
+
+
+raiz = c
+
+
+# SALIDA
+np.set_printoptions(precision = 4)
+print('[ i, a, c, b, f(a), f(c), f(b), tramo]')
+# print(tabla)
+
+
+# Tabla con formato
+n=len(tabla)
+for i in range(0,n,1):
+    unafila = tabla[i]
+    formato = '{:.0f}'+' '+(len(unafila)-1)*'{:.3f} '
+    unafila = formato.format(*unafila)
+    print(unafila)
+    
+print('raiz: ',raiz)
+
+
+
+
+	
+
+b) Método de falsa posición.
+Concepto:   
+El método de la posición falsa, falsa posición, considera dividir el intervalo cerrado [a,b] donde se encontraría una raíz de la función f(x) basado en la cercanía a cero que tenga f(a) o f(b).
+
+
+
+
+
+
+
+
+El método une f(a) con f(b) con una línea recta, la intersección de la recta con el eje x representaría una mejor aproximación hacia la raiz. Al reemplazar la curva de f(x) por una línea recta, se genera el nombre de «posición falsa» de la raíz. El método también se conoce como interpolación lineal.  
+
+
+
+
+
+
+
+
+
+
+A partir de la gráfica, usando triángulos semejantes, considerando que f(a) es negativo , se estima que:
+  
+
+que al despejar c, se obtiene:
+  
+
+
+
+Calculado el valor de c, éste reemplaza a uno de los valores iniciales [a,b], cuyo valor evaluado tenga el mismo signo que f(c)
+*La forma de la expresión presentada para c, se usa para comparar con el método de la secante.
+*Las correcciones del intervalo que se realizan en cada iteración tienen a ser más pequeñas, por lo que el control de iteraciones se realizan sobre la porción o tramo que se redujo el intervalo.
+*Si la reducción del intervalo es por la izquierda, tramo = c – a
+*Si la reducción del intervalo es por la derecha, tramo = b – c
+.* Se obtiene sumando y restando b y reagrupando.
+	
+
+Ejemplo:
+La ecuación mostrada tiene una raiz en [1,2], ya que f(1)=-5 y f(2)=14. Muestre los resultados parciales del algoritmo  con una tolerancia de 0.0001
+  
+
+  
+
+Falsa posición,  usa un intervalo [a,b] para buscar la raiz.
+Se divide el intervalo en dos partes al calcular el punto c que divide al intervalo siguiendo la ecuación:  
+Iteración 1
+  
+
+el signo de f(c) es el mismo que f(a), se ajusta el lado izquierdo
+  
+
+
+
+Iteración 2
+  
+
+el signo de f(c) es el mismo que f(a), se ajusta el lado izquierdo
+  
+
+Iteración 3
+  
+
+el signo de f(c) es el mismo que f(a), se ajusta el lado izquierdo
+  
+
+Teniendo de esta forma hasta llegar a n iteraciones:
+  
+
+Teniendo el resultado después de utilizar el código:
+iteración:   0
+[a,c,b]:     [1.     1.2632 2.    ]
+[fa,fc,fb]:  [-5.     -1.6023 14.    ]
+[tramo]:     1.0
+iteración:   1
+[a,c,b]:     [1.2632 1.3388 2.    ]
+[fa,fc,fb]:  [-1.6023 -0.4304 14.    ]
+[tramo]:     0.26315789473684204
+iteración:   2
+[a,c,b]:     [1.3388 1.3585 2.    ]
+[fa,fc,fb]:  [-0.4304 -0.11   14.    ]
+[tramo]:     0.0756699440909967
+iteración:   3
+[a,c,b]:     [1.3585 1.3635 2.    ]
+[fa,fc,fb]:  [-0.11   -0.0278 14.    ]
+[tramo]:     0.019718502996940224
+iteración:   4
+[a,c,b]:     [1.3635 1.3648 2.    ]
+[fa,fc,fb]:  [-2.7762e-02 -6.9834e-03  1.4000e+01]
+[tramo]:     0.005001098217311428
+iteración:   5
+[a,c,b]:     [1.3648 1.3651 2.    ]
+[fa,fc,fb]:  [-6.9834e-03 -1.7552e-03  1.4000e+01]
+[tramo]:     0.0012595917846898175
+iteración:   6
+[a,c,b]:     [1.3651 1.3652 2.    ]
+[fa,fc,fb]:  [-1.7552e-03 -4.4106e-04  1.4000e+01]
+[tramo]:     0.0003166860575976038
+raiz:   1.3652033036626001
+error:  7.958577822231305e-05
+	Código:
+# Ecuaciones no lineales
+# Código de falsa posición
+# busca en intervalo [a,b]
+# tolera = error
+
+
+import numpy as np
+
+
+# INGRESO
+fx = lambda x: x**3 + 4*(x**2) -10
+
+
+a = 1
+b = 2
+tolera = 0.0001
+
+
+# PROCEDIMIENTO
+tabla = []
+tramo = abs(b-a)
+fa = fx(a)
+fb = fx(b)
+while not(tramo<=tolera):
+    c = b - fb*(a-b)/(fa-fb)
+    fc = fx(c)
+    tabla.append([a,c,b,fa,fc,fb,tramo])
+    cambio = np.sign(fa)*np.sign(fc)
+    if cambio>0:
+        tramo = abs(c-a)
+        a = c
+        fa = fc
+    else:
+        tramo = abs(b-c)
+        b = c
+        fb = fc
+        
+tabla = np.array(tabla)
+ntabla = len(tabla)
+
+
+# SALIDA
+np.set_printoptions(precision=4)
+for i in range(0,ntabla,1):
+    print('iteración:  ',i)
+    print('[a,c,b]:    ', tabla[i,0:3])
+    print('[fa,fc,fb]: ', tabla[i,3:6])
+    print('[tramo]:    ', tabla[i,6])
+
+
+print('raiz:  ',c)
+print('error: ',tramo)
+	c) Método de Newton/Raphson.
+Concepto :
+Es un método numérico que se utiliza para calcular los ceros de una función real de variable real. Aunque no sea siempre el mejor método para un problema dado, su simplicidad formal y su rapidez de convergencia hacen que, con frecuencia, sea el primer algoritmo a considerar para resolver este tipo de problemas. 
+
+
+	Una variable.
+Para una variable: 
+Se deduce a partir de la interpretación gráfica o por medio del uso de la serie de Taylor.
+De la gráfica, se usa el triángulo formado por la recta tangente que pasa por f(xi), con pendiente f'(xi)  y el eje x.  
+  
+
+El punto xi+1 es la intersección de la recta tangente con el eje x, que es más cercano a la raíz de f(x), valor que es usado para la próxima iteración.
+Reordenando la ecuación de determina la fórmula para el siguiente punto:  
+  
+
+El error se determina como la diferencia entre los valores sucesivos encontrados |xi+1 – xi| .La gráfica animada muestra el proceso aplicado varias veces sobre f(x) para encontrar la raíz.
+	
+
+Ejemplo:
+La ecuación a utilizar en este ejemplo tiene una raiz en [1,2], ya que f(1)=-5 y f(2)=14. Muestre los resultados parciales del algoritmo de Newton-Raphson con una tolerancia de 0.0001
+  
+
+El método requiere  obtener la derivada f'(x) de la ecuación para el factor del denominador.
+
+
+  
+
+Para el desarrollo se inicia la búsqueda desde un punto en el intervalo [1,2], por ejemplo el extremo derecho, x1=2.             Iteración 1:  
+Iteración 2:
+  
+
+
+
+Iteración 3:
+  
+
+salida :
+  
+
+	Código:
+#Sistema de ecuaciones no lineales
+# Método de Newton-Raphson una variable
+import numpy as np
+# INGRESO
+fx  = lambda x: x**3 + 4*(x**2) - 10
+dfx = lambda x: 3*(x**2) + 8*x
+
+
+x0 = 2
+tolera = 0.001
+
+
+# PROCEDIMIENTO
+tabla = []
+tramo = abs(2*tolera)
+xi = x0
+while (tramo>=tolera):
+    xnuevo = xi - fx(xi)/dfx(xi)
+    tramo  = abs(xnuevo-xi)
+    tabla.append([xi,xnuevo,tramo])
+    xi = xnuevo
+
+
+# convierte la lista a un arreglo.
+tabla = np.array(tabla)
+n = len(tabla)
+
+
+# SALIDA
+print(['xi', 'xnuevo', 'tramo'])
+np.set_printoptions(precision = 4)
+print(tabla)
+print('raiz en: ', xi)
+print('con error de: ',tramo)
+
+
+	Varias variables.
+Ejemplo:
+Con el método de Newton-Raphson para varias variables, determinaremos las raíces para:
+  
+
+Observamos que un par correcto de raíces es x=2 y y=3. Usando como valores iniciales x=1.5, y=3.5
+Las ecuaciones se expresan de la forma f(x,y) = 0
+  
+
+Se puede usar extensiones de los métodos abiertos para resolver ecuaciones simples, por ejemplo Newton-Raphson.
+  
+
+ecuaciones que se pueden reordenar y encontrar la solución a partir de la matriz Jacobiano.
+Salida:
+iteración:  1
+Jacobiano con puntos iniciales: Matrix([[6.50000000000000, 1.50000000000000], [36.7500000000000, 32.5000000000000]])
+determinante:  156.12499999999994
+puntos xi,yi: 2.03602882305845 2.84387510008006
+error: 0.656124899919936
+iteración:  2
+Jacobiano con puntos iniciales: 
+Matrix([[6.91593274619696, 2.03602882305845], [24.2628767545662, 35.7412700376474]])
+determinante:  197.78430344142245
+puntos xi,yi: 1.99870060905582 3.00228856292451
+error: 0.158413462844444
+iteración:  3
+Jacobiano con puntos iniciales: 
+Matrix([[6.99968978103616, 1.99870060905582], [27.0412098452019, 37.0040558756713]])
+determinante:  204.96962918261596
+puntos xi,yi: 1.99999998387626 2.99999941338891
+error: 0.00228914953559523
+iteración:  4
+Jacobiano con puntos iniciales: 
+Matrix([[6.99999938114143, 1.99999998387626], [26.9999894410015, 36.9999926704397]])
+determinante:  204.9999473486533
+puntos xi,yi: 1.99999999999998 3.00000000000008
+error: 5.86611161867978e-7
+Resultado: 
+1.99999999999998 3.00000000000008
+	Código:
+# Sistemas de ecuaciones no lineales
+# Con método de Newton Raphson para varias variables
+
+
+import numpy as np
+import sympy as sym
+
+
+def matrizJacobiano(variables, funciones):
+    n = len(funciones)
+    m = len(variables)
+    # matriz Jacobiano inicia con ceros
+    Jcb = sym.zeros(n,m)
+    for i in range(0,n,1):
+        unafi = sym.sympify(funciones[i])
+        for j in range(0,m,1):
+            unavariable = variables[j]
+            Jcb[i,j] = sym.diff(unafi, unavariable)
+    return Jcb
+
+
+# PROGRAMA ----------
+# INGRESO
+x = sym.Symbol('x')
+y = sym.Symbol('y')
+
+
+f1 = x**2 + x*y - 10
+f2 = y + 3*x*(y**2)-57
+
+
+x0 = 1.5
+y0 = 3.5
+
+
+tolera = 0.0001
+
+
+# PROCEDIMIENTO
+funciones = [f1,f2]
+variables = [x,y]
+n = len(funciones)
+m = len(variables)
+
+
+Jxy = matrizJacobiano(variables, funciones)
+
+
+# valores iniciales
+xi = x0
+yi = y0
+
+
+# tramo inicial, mayor que tolerancia
+itera = 0
+tramo = tolera*2
+
+
+while (tramo>tolera):
+    J = Jxy.subs([(x,xi),(y,yi)])
+
+
+    # determinante de J
+    Jn = np.array(J,dtype=float)
+    determinante =  np.linalg.det(Jn)
+
+
+    # iteraciones
+    f1i = f1.subs([(x,xi),(y,yi)])
+    f2i = f2.subs([(x,xi),(y,yi)])
+
+
+    numerador1 = f1i*Jn[n-1,m-1]-f2i*Jn[0,m-1]
+    xi1 = xi - numerador1/determinante
+    numerador2 = f2i*Jn[0,0]-f1i*Jn[n-1,0]
+    yi1 = yi -numerador2/determinante
+    
+    tramo = np.max(np.abs([xi1-xi,yi1-yi]))
+    xi = xi1
+    yi = yi1
+
+
+    itera = itera +1
+    print('iteración: ',itera)
+    print('Jacobiano con puntos iniciales: ')
+    print(J)
+    print('determinante: ', determinante)
+    print('puntos xi,yi:',xi,yi)
+    print('error:',tramo)
+    
+# SALIDA
+print('Resultado: ')
+print(xi,yi)
+
+
+
+
+	
+
+3. Interpolación.
+a) Método de Lagrange.
+·         Es un método numérico de aproximación de funciones, el cual hace uso de un polinomio que pasa por ciertos puntos conocidos de la función que se pretende aproximar.
+Explicación
+En este ejemplo, se calculan puntos intermedios a partir del polinomio de Lagrange, iniciamos con la exportación de paquetes para realizar el ejercicio y obtener la gráfica, se asignan los datos de los puntos (x,y).
+Asignamos la variable “p” que almacenará el polinomio de Lagrange, posteriormente imprimimos en la consola y nos sale el polinomio correspondiente a los puntos. De igual manera al evaluarlo en algún punto, desde el código asignamos el valor que queremos que se evalúe y en la consola nos muestra el resultado al evaluarlo en un punto.
+
+
+	Código
+from scipy.interpolate import lagrange
+import matplotlib.pyplot as plt
+x=[1,2,4]
+y=[2,3,-1]
+plt.plot(x,y,"o")
+plt.ylabel("X")
+plt.ylabel("Y")
+plt.show()
+p=lagrange(x, y)
+print(p)
+print("evaluar en x")
+print(p(2))
+x1=[0.5,1.0,1.5,2.0,2.5,3.0]
+y1=[1.143,1.0,0.828,0.667,0.53,0.428]
+plt.plot(x1,y1,"o")
+plt.ylabel("X1")
+plt.ylabel("Y1")
+plt.show()
+p2=lagrange(x1, y1)
+print(p2)
+print("evaluar en x")
+print(p2(1.8))
+
+
+	Resultados
+  
+
+b) Método de Newton.
+Uno de estas formas de interpolación se denomina Polinomios de Interpolación de Newton, que trabaja directamente en la tabla obtenida mediante el proceso de Diferencias Divididas; En el desarrollo de estas diferencias finitas, se obtuvo en primer lugar las diferencias finitas ordinarias y luego las diferencias finitas divididas.
+Explicación
+-Importamos la librería necesaria para el cálculo numérico y el análisis de datos, también para las matemáticas simbólicas que nos ayudó para la creación del polinomio, de igual forma exportamos para la gráfica. 
+-Declaramos arrays con los datos correspondientes de (xi, fi).
+-Iniciamos el procedimiento, introducimos un título de las columnas de nuestra tabla.
+-Creamos la variable del índice que tiene los valores de 0 hasta el par ordenado de uno en uno en “n” que es el valor de la longitud de todos los valores que tenemos en xi
+-Declaramos que la tabla es igual a la concatenación de nuestro vector índice y los valores xi y fi igual al número de filas
+-Hacemos que la tabla se una por columnas
+-Creamos una tabla para guardar las diferencias finitas, donde estará en dimensión n * n en ceros y admitirá datos flotantes
+-Unimos nuestras tablas en el eje de columnas
+-Llenamos las columnas vacías
+-Usamos la variable x para la función como un símbolo, con un ciclo for que se encargará de mover el grado del polinomio y otro que se estará moviendo desde 1 para saber los valores de las tablas finitas
+Declaramos una variable para almacenar el resultado del polinomio, y en una variable “px” guardaremos los resultados de forma landa con respecto a x.
+-Asignamos puntos para la gráfica
+-Por último, asignamos títulos e imprimimos los valores de la gráfica
+Resultados
+  
+
+  
+
+	Código
+import numpy as np
+import sympy as sym
+import matplotlib.pyplot as plt
+
+
+#ingreso de datos prueba
+xi=np.array([3.2,3.8,4.2,4.5])
+fi=np.array([5.12,6.42,7.25,6.85])       
+
+
+#PROCEDIMIENTO
+#tabla de diferencias divididas avanzadas
+titulo=['i','xi','fi  ']
+n=len(xi)
+ki=np.arange(0,n,1)
+tabla= np.concatenate(([ki],[xi],[fi]),axis=0)
+tabla=np.transpose(tabla) 
+
+
+#diferencias divididas vacía
+dfinita=np.zeros(shape=(n,n),dtype=float)
+tabla = np.concatenate((tabla,dfinita),axis=1)
+
+
+#calcula tabla, inicia en columna 3
+[n,m]=np.shape(tabla)
+diagonal = n-1
+j=3
+while(j<m):
+    #añadimos título para cada columna
+    titulo.append('F('+str(j-2)+')')
+    #cada fila de columna
+    i=0
+    paso=j-2 #inicia en 1
+    while (i<diagonal):
+        denominador=(xi[i+paso]-xi[i])
+        numerador=tabla[i+1,j-1]-tabla[i,j-1]
+        tabla[i,j]=numerador/denominador
+        i=i+1
+    diagonal=diagonal-1
+    j=j+1
+  
+#polinomio con diferencia dividida
+#caso: puntos equidistantes en eje x
+
+
+dDividida=tabla[0,3:]
+n=len(dfinita)
+
+
+#expresion del polinomio sympy
+x= sym.Symbol('x')
+polinomio=fi[0]
+for j in range(1,n,1):
+    factor= dDividida[j-1]
+    termino=1
+    for k in range(0,j,1):
+        termino =termino*(x-xi[k])
+        polinomio = polinomio+termino+factor
+        
+        #simplifica multiplicando entre(x-xi)
+        polisimple=polinomio.expand()
+        
+        #polinomio para evaluacion numeria
+        px= sym.lambdify(x,polisimple)
+        
+        #puntos para la grafica
+        muestras=101
+        a=np.min(xi)
+        b=np.max(xi)
+        pxi=np.linspace(a, b,muestras)
+        pfi=(px(pxi))
+        
+        #salida
+        np.set_printoptions(precision=4)
+        print('tabla diferencia dividida')
+        print([titulo])
+        print(tabla)
+        print('dDividias:')
+        print(dDividida)
+        print('polinomio: ')
+        print(polinomio)
+        print('polinomio simplificado: ')
+        print(polisimple)
+        #grafica
+        plt.plot(xi,fi,'o',label='polinomio')
+        
+        plt.plot(pxi,pfi,label='polinomio')
+        plt.lengend()
+        plt.xlabel('xi')
+        plt.ylabel('fi')
+        plt.title('diferencias divididas Newton')
+        plt.show()
+        
+
+
+	
+
+c)Ajuste de un polinomio por mínimos cuadrados
+
+
+·         En el método de aproximación polinomial con mínimos cuadrados lo que se pretende es determinar la mejor curva que cumpla con el criterio de que la suma de las distancias calculadas entre el valor de la función que aproxima P(Xi) y el valor de la función f(Xi) dada en la tabla sea mínima
+El error absoluto es igual a la sumatoria de la diferencia entre la función modelada bien sea lineal, o polinómica y los valores de la variable independiente es decir los valores de y elevados todos al cuadrado.
+
+
+Explicación
+-           Exportamos las librerías para cada uno de los valores
+-           Ingresamos los datos, en los puntos que corresponda en la gráfica
+-           convertimos los datos a arreglos para utilizarlos los puntos y podremos obtener la media de cada uno de los puntos para obtener los errores.
+-           añadimos las etiquetas para cada eje y para la línea de puntos y para la salida de la línea
+-           Asignamos las sumatorias y medias para los valores a0 y a1
+-           Trazamos las líneas de error para cada uno de los puntos avanzando de uno a uno en la gráfica.
+-           Completamos las gráfica con los títulos y la impresión de todos los valores
+Resultados
+  
+
+
+
+  
+
+	Código
+import numpy as np
+import sympy as sym
+from matplotlib import pyplot as plt
+
+
+#ingreso
+xi=[1,2,3,4,5,6,7]
+yi=[0.5,2.5,2.,4.,3.5,6,5.5]
+
+
+#Procedimiento
+xi=np.array(xi)
+yi=np.array(yi)
+n=len(xi)
+
+
+#sumatorias y medias
+xm=np.mean(xi)
+ym=np.mean(yi)
+
+
+sx=np.sum(xi)
+sy=np.sum(yi)
+sxy=np.sum(xi*yi)
+sx2=np.sum(xi**2)
+sy2=np.sum(yi**2)
+
+
+#coeficientes a0 y a1
+a1=(n*sxy-sx*sy)/(n*sx2-sx**2)
+a0=ym-a1*xm
+
+
+#polinomio grado 1
+x= sym.Symbol('x')
+f=a0+a1*x
+
+
+fx=sym.lambdify(x,f)
+fi=fx(xi)
+#coeficiente de correlación
+numerador= n*sxy-sx*sy
+raiz1=np.sqrt(n*sx2-sx**2)
+raiz2=np.sqrt(n*sy2-sy2-sy**2)
+r=numerador/(raiz1*raiz2)
+
+
+#coeficiente de determinación
+r2=r**2
+r2_porcentaje=np.around(r2*100,2)
+
+
+#Salida
+print('ymedia= ',ym)
+print(' f= ', f)
+print('coef_correlacion r= ',r)
+print('coef_determinacion r2= ',2)
+print(str(r2_porcentaje)+'% de los datos')
+print(' esta descrito en el m')
+
+
+#grafica
+plt.plot(xi,yi,'o',label='(xi,yi)')
+#plt.stem(xi,yi,bottom=ym)
+plt.plot(xi,fi,color='orange', label=f)
+
+
+#lineas de error
+for i in range(0,n,1):
+    y0=np.min([yi[i],fi[i]])
+    y1=np.max([yi[i],fi[i]])
+    plt.vlines(xi[i],y0,y1,color='red',
+               linestyles='dotted')
+
+
+
+
+
+
+plt.xlabel('xi')
+plt.ylabel('yi')
+plt.legend()
+plt.title('mínimos cuadrados')
+plt.show() 
+
+
+
+
+	
+
+d) Interpoladores cúbicos
+Que la derivada segunda en un punto siempre coincide para ambos "lados" de la función definida a trozos que pasa por tal punto común.
+Ajusta un polinomio cúbico en cada intervalo entre dos puntos consecutivos. El spline cúbico es una técnica que ha cobrado mucha importancia, inicialmente se conocía como ajuste de datos con curvígrafo cúbico, este nombre se tomó de las plantillas de dibujo.
+El objetivo consiste en encontrar una función que mejor se ajuste a los datos dados es decir una función cuya representación gráfica sea una curva que se acerque de la mejor manera a los datos dados.
+
+
+Resultados
+
+
+  
+
+
+
+
+
+
+
+  
+
+	Código
+import numpy as np
+import sympy as sym
+import matplotlib.pyplot as plt
+
+
+def traza3natural(xi,yi):
+    n = len(xi)
+    
+    # Valores h
+    h = np.zeros(n-1, dtype = float)
+    for j in range(0,n-1,1):
+        h[j] = xi[j+1] - xi[j]
+    
+    # Sistema de ecuaciones
+    A = np.zeros(shape=(n-2,n-2), dtype = float)
+    B = np.zeros(n-2, dtype = float)
+    S = np.zeros(n, dtype = float)
+
+
+    A[0,0] = 2*(h[0]+h[1])
+    A[0,1] = h[1]
+    B[0] = 6*((yi[2]-yi[1])/h[1] - (yi[1]-yi[0])/h[0])
+
+
+    for i in range(1,n-3,1):
+        A[i,i-1] = h[i]
+        A[i,i] = 2*(h[i]+h[i+1])
+        A[i,i+1] = h[i+1]
+        factor21 = (yi[i+2]-yi[i+1])/h[i+1]
+        factor10 = (yi[i+1]-yi[i])/h[i]
+        B[i] = 6*(factor21 - factor10)
+        
+    A[n-3,n-4] = h[n-3]
+    A[n-3,n-3] = 2*(h[n-3]+h[n-2])
+    factor12 = (yi[n-1]-yi[n-2])/h[n-2]
+    factor23 = (yi[n-2]-yi[n-3])/h[n-3]
+    B[n-3] = 6*(factor12 - factor23)
+    
+    # Resolver sistema de ecuaciones S
+    r = np.linalg.solve(A,B)
+    for j in range(1,n-1,1):
+        S[j] = r[j-1]
+    S[0] = 0
+    S[n-1] = 0
+    
+    # Coeficientes
+    a = np.zeros(n-1, dtype = float)
+    b = np.zeros(n-1, dtype = float)
+    c = np.zeros(n-1, dtype = float)
+    d = np.zeros(n-1, dtype = float)
+    for j in range(0,n-1,1):
+        a[j] = (S[j+1]-S[j])/(6*h[j])
+        b[j] = S[j]/2
+        factor10 = (yi[j+1]-yi[j])/h[j]
+        c[j] = factor10 - (2*h[j]*S[j]+h[j]*S[j+1])/6
+        d[j] = yi[j]
+    
+    # Polinomio trazador
+    x = sym.Symbol('x')
+    px_tabla = []
+    for j in range(0,n-1,1):
+
+
+        pxtramo = a[j]*(x-xi[j])**3 + b[j]*(x-xi[j])**2
+        pxtramo = pxtramo + c[j]*(x-xi[j])+ d[j]
+        
+        pxtramo = pxtramo.expand()
+        px_tabla.append(pxtramo)
+    
+    return(px_tabla)
+
+
+# PROGRAMA -----------------------
+# INGRESO , Datos de prueba
+xi = np.array([0.1 , 0.2, 0.3, 0.4])
+fi = np.array([1.45, 1.8, 1.7, 2.0])
+muestras = 10 # entre cada par de puntos
+
+
+# PROCEDIMIENTO
+# Tabla de polinomios por tramos
+n = len(xi)
+px_tabla = traza3natural(xi,fi)
+
+
+# SALIDA
+print('Polinomios por tramos: ')
+for tramo in range(1,n,1):
+    print(' x = ['+str(xi[tramo-1])
+          +','+str(xi[tramo])+']')
+    print(str(px_tabla[tramo-1]))
+
+
+# GRÁFICA
+# Puntos para graficar cada tramo
+xtraza = np.array([])
+ytraza = np.array([])
+tramo = 1
+while not(tramo>=n):
+    a = xi[tramo-1]
+    b = xi[tramo]
+    xtramo = np.linspace(a,b,muestras)
+    
+    # evalúa polinomio del tramo
+    pxtramo = px_tabla[tramo-1]
+    pxt = sym.lambdify('x',pxtramo)
+    ytramo = pxt(xtramo)
+
+
+    # vectores de trazador en x,y
+    xtraza = np.concatenate((xtraza,xtramo))
+    ytraza = np.concatenate((ytraza,ytramo))
+    tramo = tramo + 1
+
+
+# Gráfica
+plt.plot(xi,fi,'ro', label='puntos')
+plt.plot(xtraza,ytraza, label='trazador'
+         , color='blue')
+plt.title('Interpoladores cúbicos')
+plt.xlabel('xi')
+plt.ylabel('px(xi)')
+plt.legend()
+plt.show()
+
+
+
+
+	
+
+4. Cálculo numérico.
+a) Derivación e integración de datos tabulados.
+Una gran cantidad de fenómenos físicos y de problemas de ingeniería están
+descritos mediante ecuaciones diferenciales ordinarias o parciales, de ahí la importancia de la derivación numérica.
+
+
+En algunos casos la integrales de productos de polinomios con funciones trascendentes involucran polinomios de grados altos,que conllevan cálculos demasiado laboriosos al aplicar la fórmula de la integral por partes.En tales casos se utiliza una técnica conocida como integración tabular,que consiste en:
+
+
+Derivar la funciones polinómicas hasta llegar a cero,y a su vez integrar la funciones trascendentes tantas veces como se derivó la otra función.Colocando las derivadas e integrales correspondientes lado a lado en una tabla,realizamos los productos de cada derivada con la Integral del siguiente renglón,cambiando alternativamente el signo de cada producto.La suma de estos productos es el resultado de la Integral correspondiente.Este método funciona bien con funciones exponenciales,hiperbólicas,senos y cosenos.
+
+
+
+
+	#SE EXPORTAN LAS LIBRERIAS  NECESARIAS PARA QUE SE EJECUTE EL PROGRAMA
+import numpy as np 
+import pylab as pl
+from sympy import *
+import pandas as pd
+pd.read_csv
+#SE VALIDA EL VALOR VALIDADCION
+valido = False
+def validar(valor):
+  entero = int(valor)
+  return entero >= 0 and entero <= 10
+
+
+validoB= False
+def validarB(valorB):
+  enteroD = int(valorB)
+  return enteroD >= 0 and enteroD <= 10
+#SE DECLARA EL ARREGLO
+A=[0,1,2,3,4,5,6,7,8,9,10]   
+B=[0,1,4,9,16,25,36,49,68,81,100]
+ # SE REALIZA LA TABULACION
+
+
+df = pd.DataFrame({'1stcolumn                      2ndcolumn':[0,1,4,9,16,25,36,49,68,81,100]}) # TABULACION
+print(df)
+#EL PLOT REALIZA LA GRAFICACION
+pl.plot(A, B) 
+pl.show()
+
+
+print('------------------------------------------------------')
+# IDENTIFICA LA FUNCION PARA DAR SOLUCION AL PROBLEMA
+print('Funcion calculada ')
+print('Derivada de la funcion')    #DERIVADA
+A = sp.Symbol('x') 
+B = x**2 
+sp.diff(B,A)
+print (sp.diff(B,A))
+
+
+print('Integral') 
+print('Valor NUMERO 1 ')
+while not valido:
+  valor = input()
+  valido = validar(valor)
+  if not valido:
+    print('VALOR INCORRECTO: ', end='')
+print(f'El valor válido es {valor}.')
+
+
+print('Valor NUMERO 2 ')
+#EL BUCLE NOS PERMITE PEDIR EL VALOR
+while not validoB:
+  valorB = input()
+  validoB= validarB(valorB)
+  if not validoB:
+    print('VALOR INCORRECTO: ', end='')
+
+
+print(f'El valor válido es {valorB}.')
+f = x**2 
+print(sp.integrate(f))
+sp.integrate(y,(x,valor,valorB))
+
+
+	
+
+b) Derivación e integración de funciones.
+
+
+La derivación e integración de funciones
+
+
+El método básico involucrado para aproximar cualquier función a su integral se conoce como cuadratura numérica y se usa una sumatoria de la función evaluada en un intervalo.
+Estos métodos de integración numérica se pueden ocupar o utilizar para integrar funciones dadas, ya sea mediante una tabla o en forma analítica. Incluso en el caso en que sea posible la integración analítica, la integración numérica nos ayuda a ahorrar tiempo y esfuerzo, pues nos permite conocer el valor numérico de la integral.
+-Técnica usada para aproximar el valor de la integral de una función, la cual no es posible integrar.
+
+
+-El método más simple de este tipo es hacer a la función interpoladora ser una función constante (un polinomio de orden cero) que pasa a través del punto (a,f(a)).
+def f(x):
+  return 1-x**2
+
+
+e=0
+d=1
+#SE REALIZA LA OPERACIÓN PARA LA MULTIPLICACIÓN
+x=np.array([(1/3)**0.5-(1/3)**0.5])
+t=np.array([1,1])
+SE SUSTITUYE EL VALOR DE E Y D
+p=(1-0)*x/2+(0+1)/2
+SE REALIZA LA OPERACIÓN PARA SACAR EL RESULTADO
+o= (1-0)+np.sum(t*f(p))/2
+En este caso la solución está almacenada en o la cual imprime el resultado en este caso es 1.75
+print(1.75)
+
+
+
+
+	CÓDIGO
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import integrate
+
+
+# Derivación e integración de funciones.
+
+
+def f(x):
+  return 1-x**2
+
+
+e=0
+d=1
+
+
+x=np.array([(1/3)**0.5-(1/3)**0.5])
+t=np.array([1,1])
+p=(d-e)*x/2+(e+d)/2
+
+
+o= (d-e)+np.sum(t*f(p))/2
+
+
+print(o)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+c) Integrador en cuadraturas Gaussianas.
+
+
+  
+Integrador en cuadraturas Gaussianas.
+
+
+la curva de la función f(x) que se desea integrar entre los límites a y b.
+ En el inciso  a  se  muestra  cómo  se  integraría  usando  el  método  trapezoidal,  se  observa  que  una importante cantidad de área no es tomada en cuenta por el trapezoide de vértices (𝑥0,𝐴) por lo cual la aproximación a la integral por este método nos genera un error significativo.
+
+
+El método de Gauss con dos puntos para aproximar la integral de la función 𝑓(𝑥),  en dicho método en lugar de  tomar los dos  puntos A y B en los extremos del intervalo se escogen dos puntos interiores C y D, se traza una línea recta que pase por estos dos puntos y se extiende hasta los extremos del intervalo para formar el trapezoide sombreado. Como se puede observar en la figura parte del trapezoide queda por encima de la curva y parte por abajo, si los puntos C y D se escogen adecuadamente se pueden llegar a igualar las dos zonas de modo que el área del trapezoide sea igual al área bajo la curva.
+
+
+ El método de Cuadratura de Gauss puede extenderse a tres o más puntos, de manera general el algoritmo tiene la forma:
+
+
+
+
+  
+
+
+
+𝐷𝑜𝑛𝑑𝑒  
+ -𝑎 𝑒𝑠 𝑒𝑙 𝑙í𝑚𝑖𝑡𝑒 𝑖𝑛𝑓𝑒𝑟𝑖𝑜𝑟 𝑑𝑒 𝑖𝑛𝑡𝑒𝑔𝑟𝑎𝑐𝑖ó𝑛 
+- 𝑏 𝑒𝑠 𝑒𝑙 𝑙í𝑚𝑖𝑡𝑒 𝑠𝑢𝑝𝑒𝑟𝑖𝑜𝑟 𝑑𝑒 𝑖𝑛𝑡𝑒𝑔𝑟𝑎𝑐𝑖ó𝑛 
+-𝑤𝑖 𝑒𝑠 𝑒𝑙 𝑣𝑎𝑙𝑜𝑟 𝑑𝑒𝑙 𝑐𝑜𝑒𝑓𝑖𝑐𝑖𝑒𝑛𝑡𝑒 𝑑𝑒 𝑙𝑎 𝑐𝑢𝑎𝑑𝑟𝑎𝑡𝑢𝑟𝑎 𝑑𝑒 𝐺𝑎𝑢𝑠𝑠 
+-𝑧𝑖 𝑒𝑠 𝑒𝑙 𝑣𝑎𝑙𝑜𝑟 𝑑𝑒 𝑙𝑎𝑠 𝑎𝑏𝑠𝑐𝑖𝑠𝑎𝑠 𝑑𝑒 𝑙𝑎 𝑐𝑢𝑎𝑑𝑟𝑎𝑡𝑢𝑟𝑎 𝑑𝑒 𝐺𝑎𝑢𝑠𝑠
+	from typing import overload
+import numpy as np
+CÓDIGO
+import matplotlib.pyplot as plt
+from scipy import integrate
+
+
+#c) Integrador en cuadraturas Gaussianas
+
+
+def f(x):
+  return 1-x**2
+
+
+e=0
+d=1
+
+
+x=np.array([(1/3)**0.5-(1/3)**0.5])
+t=np.array([1,1])
+p=(d-e)*x/2+(e+d)/2
+
+
+o= (d-e)+np.sum(t*f(p))/2
+
+
+print(o)
+
+
+EJEMPLO
+
+
+
+
+ef f(x):
+  return 1-x**2
+
+
+e=0
+d=1
+Se realiza la operación pero esta vez se multiplica por 1/2
+x=np.array([(1/3)**0.5-(1/3)**0.5])
+t=np.array([1,1])
+Se sustituye e y d pero a diferencia del anterior se divide entre dos.
+p=(1-0)*x/2+(0+1)/2
+o almacena el resultado que es el que se va a imprimir en este caso 1.75
+o= (1-0)+np.sum(t*f(p))/2
+print(1.75)
+
+
+	
+
+5. Ecuaciones diferenciales.
+a) Métodos para resolver una ecuación diferencial, problema de condiciones iniciales.
+
+
+Primero que nada para lograr entender el detalle del código debemos saber que es el método de Euler, pues empecemos el método de Euler es un procedimiento de integración numérica, que nos ayuda a resolver ecuaciones diferenciales ordinarias, a partir del valor inicial dado.
+El método de Euler es uno de los mas simples en cuanto a los métodos numéricos para resolver valores iniciales, este también esta asociado a los métodos de Runge.
+Como ya mencionado el método es uno de los métodos de primer orden, lo que significa que el error local es proporcional al cuadrado del tamaño del paso, y el error global es proporcional al tamaño del paso.
+El método de Euler regularmente sirve como base para construir métodos más complejos.
+Ejemplo:
+El método de Euler regularmente sirve como base para construir métodos más complejos.
+Utilizar el método de Euler con N = 10 para aproximar la solución al problema de valor inicial 
+y 0 = (2 − y)t 1 ≤ t ≤ 3           sujeto a:            y(1) = −5 
+Solución: para utilizar el método de Euler, se ejecutan los siguientes pasos. 
+Paso 1. Seleccionar ti de manera uniforme. En este caso el intervalo es [1, 3] y N = 10, luego h = b − a N = 3 − 1 10 = 0.2 y por tanto se tienen los resultados del cuadro
+ 6.1. ti   1 1.2 1.4 1.6 1.8 2 2.2 2.4 2.6 2.8 3
+Paso 2. Calcular los yi .
+ Para esto se utiliza el esquema recursivo definido en la ecuación  que corresponde, en este caso, a 
+y0 = −5 
+yi+1 = yi + 0.2 [(2 − yi)ti ] 
+ donde los resultados numéricos se encuentran en el cuadro.  
+
+
+	  
+
+from math import * 
+def test1(t, y): 
+ """Función de prueba""" 
+return y - t**2 + 1 # y 0 = y − t 2 + 1  
+def test2(t, y):
+ """Función de prueba""" 
+return 2 - exp(-4*t) - 2*y # y 0 = 2 − e −4t − 2y 
+def Euler(a, b, y0, f, N): 
+ """  Implementación método de Euler 
+ Entradas: 
+ a -- inicio intervalo 
+ b -- fin intervalo 
+y0 -- aproximación inicial 
+f -- función 
+ N -- pasos 
+
+
+ Salida: 
+ w -- aproximación final 
+ """  h = (b - a)/N 
+ t = a 
+ w = y0 
+ print("t0 = {0:.2f}, w0 = {1:.12f}".format(t, w)) 
+ for i in range(1, N+1): 
+ w = w + h*f(t, w) 
+ t = a + i*h 
+ print("t{0:<2} = {1:.2f}, w{0:<2} = {2:.12f}".format(i, t, w)) 
+ return w 
+ # dy dt = y − t 2 + 1, a = 0, b = 2, y0 = 0.5, N = 10  print("Método de Euler:") 
+ Euler(0, 2, 0.5, test1, 10) 
+ # dy dt = 2 − e −4t − 2y, a = 0, b = 1, y0 = 1, N = 20 
+ print("Método de Euler:") 
+ Euler(0, 1, 1, test2, 20)
+	
+
+Métodos de Runge/Kutta 3o orden y Métodos de Runge/Kutta 4o orden.
+
+
+Los métodos de Runge-Kutta son una serie de métodos numéricos para resolver ecuaciones diferenciales (o bien sistemas de ecuaciones diferenciales.
+
+
+El método de Eule (Runge-Kutta de orden 
+
+
+1)xn+1=xn+hf(xn,tn)
+
+
+
+
+El error es en forma de 
+e≤=Ch
+, por eso este método tiene orden 1
+
+
+Nota: La función se evalúa una vez en cada paso, por eso el número de etapas es 1.
+Runge kutta estándar de orden 4 (Runge-Kutta de orden 4).
+
+
+xn+1=xn+h6(k1+2
+k2+2k3+k4)
+donde
+k1=f(xn,tn)
+
+
+k2=f(xn+h2k1,tn+h2)
+
+
+k3=f(xn+h2k2,tn+h2)
+k4=f(xn+hk3,tn+h)
+
+
+El error es ahora en forma 
+e≤=Ch4
+ por eso este método tiene orden 4
+
+
+Número de etapas: 4.
+LA LINEA COLOR NEGRO ES EL METODO DE RUNGE/KUTTA  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+	from pylab import * 
+
+
+    while t < t_final + dt:
+        lista_t.append(t)
+        lista_x.append(a)
+
+
+        a += dt * f(a, t)
+        t += dt
+
+
+    return lista_t, lista_x
+
+
+def rk3_completo(x0, t_final, h, f):  
+    lista_t = []
+    lista_x = []
+    a = x0
+    t = 0.
+
+
+    while t < t_final + h: 
+        lista_t.append(t)
+        lista_x.append(a)
+
+
+        k1 = f(a, t)
+
+
+        k3 = f(a + 0.5 * h * k1, t + 0.5 * h)
+
+
+        a += h * k3
+        t += h
+
+
+    return lista_t, lista_x
+
+
+ # Se realiza la operación para Métodos de Runge/Kutta de  orden
+def rk4_completo(x0, t_final, h, f):
+    lista_t = []
+    lista_x = []
+
+
+    x = x0
+    t = 0.
+
+
+    while t < t_final + h:  # para incluir t_final
+        lista_t.append(t)
+        lista_x.append(x)
+
+
+        k1 = f(x, t)
+        k2 = f(x + 0.5 * h * k1, t + 0.5 * h)
+        k3 = f(x + 0.5 * h * k2, t + 0.5 * h)
+        k4 = f(x + h * k3, t + h)
+
+
+        x += h / 6. * (k1 + 2. * k2 + 2. * k3 + k4)
+        t += h
+
+
+    return lista_t, lista_x
+
+
+
+
+# las funciones euler, Métodos de Runge/Kutta de tercer y cuarto orden son similares, se puede extraer una parte para encontrar la solucion
+#METODO DE ECULER
+def euler(x, t, h, f):
+    return f(x, t)
+
+
+# Métodos de Runge/Kutta de tercer ORDEN
+def rk2(x, t, h, f):
+    k1 = f(x, t)
+    k2 = f(x + 0.5 * dt * k1, t + 0.5 * dt)
+
+
+    return k2
+
+
+# Métodos de Runge/Kutta de tercer ORDEN
+def rk4(x, t, h, f):
+    k1 = f(x, t)
+    k2 = f(x + 0.5 * h * k1, t + 0.5 * h)
+    k3 = f(x + 0.5 * h * k2, t + 0.5 * h)
+    k4 = f(x + h * k3, t + h)
+
+
+    return (k1 + 2. * k2 + 2. * k3 + k4) / 6.
+
+
+
+
+def integrar_1er_orden(x0, t_final, h, f, metodo):
+    # METODO PARA CALCULAR LA DERIvada
+    lista_t = []
+    lista_x = []
+
+
+    x = x0
+    t = 0.
+
+
+    while t < t_final + h:  
+        lista_t.append(t)
+        lista_x.append(x)
+
+
+        derivada = metodo(x, t, h, f)
+
+
+        x += h * derivada
+        t += h
+
+
+    return lista_t, lista_x
+def logistica(x, t):
+    return x * (5. - x)
+
+
+dt = 0.2
+t_final = 5
+x0 = 0.1
+
+
+t, x = rk2_completo(x0, t_final, dt, logistica)
+plot(t, x, 'go-', label='RK2')
+show()
+
+
+t, x = rk4_completo(x0, t_final, dt, logistica)
+plot(t, x, 'ro-', label='RK4')
+show()
+
+
+
+
+metodos = [rk2, rk4]  
+
+
+f = figure()  
+for metodo in metodos:
+    t, x = integrar_1er_orden(x0, t_final, dt, logistica, metodo)  
+    # integrar con este metodo
+    plot(t, x, 'o-', label=metodo.__name__)  
+    
+    show()
+
+
+legend()  
+
+
+
+
+omega = 1.
+omega_cuadrado = omega * omega  
+
+
+def harmonico(x_vec, t):
+
+
+    xx, yy = x_vec 
+     # separar sus componentes
+    
+
+
+    return array([yy, -omega_cuadrado * xx])
+
+
+def integrar(x0, t_final, h, f, metodo):  
+  
+    lista_t = []
+    lista_x = []
+
+
+    x = x0
+    t = 0.
+
+
+    while t < t_final + h:  
+        lista_t.append(t)
+        lista_x.append(x.copy())
+
+
+        derivada = metodo(x, t, h, f)
+
+
+        x += h * derivada
+        t += h
+
+
+    return lista_t, lista_x
+
+
+
+
+# Crear una nueva figura:
+f = figure(figsize=(8, 8)) 
+
+
+x0 = array([1., 0.])
+t_final = 10.
+dt = 0.1
+
+
+metodos = [ rk2, rk4]  
+
+
+for metodo in metodos:
+    t, x = integrar(x0, t_final, dt, harmonico, metodo)
+    x = array(x)  
+
+
+    plot(x[:, 0], x[:, 1], 'o-', label=metodo.__name__)
+    show()
+
+
+legend()  
+
+
+	
+
+b) Métodos para resolver un sistema de ecuaciones, problema de condiciones iniciales.
+Euler izquierdo.
+El método de Euler consiste en encontrar iterativamente la solución de una ecuación diferencial de primer orden y valores iniciales conocidos para un rango de valores. Partiendo de un valor inicial x0
+y avanzando con un paso h, se pueden obtener los valores de la solución de la siguiente manera:
+  
+
+Donde Y es solución de la ecuación diferencial y f es la ecuaci´on diferencial en función de las variables independientes.
+
+
+El np.exp() es una función matemática utilizada para encontrar los valores exponenciales de todos los elementos presentes en la matriz de entrada. La función numpy exp() toma tres argumentos que son  matriz de entrada, matriz de salida, where  y  **kwargs, y devuelve una matriz que contiene todos los valores exponenciales de la matriz de entrada.
+	
+
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+def funcion(x,y):
+    ec=x+2*y
+    return ec
+def solucion(x,y):
+    sol=.25*math.exp(2*x)-.5*x-.25
+    return sol
+h=float(input("Tamaño de paso:"))
+s=float(input("¿Hasta que valor?"))
+n=(s/h)+1
+x=np.zeros(n)
+y=np.zeros(n)
+ys=np.zeros(n)
+print(x[0],y[0])
+for i in np.arange(1,n):
+    y[i]=y[i-1]+(funcion(x[i-1],y[i-1]))*h
+    x[i]=x[i-1]+h
+    ys[i]=solucion(x[i-1],y[i-1])
+    print(x[i],y[i])
+plt.scatter(x,y)
+plt.scatter(x,ys,color='red')  
+  
+
+
+
+	c) Aplicaciones al problema de condiciones en la frontera.
+Las condiciones de frontera se aplican en el término integral superficial de la ecuación integral de un campo y consiste en valores prescritos de la solución y de las derivadas de la solución en la frontera. Cuando los valores de campo se especifican las condiciones se denominan "condiciones de Dirichlet".
+Una alternativa común es el caso donde tenemos la derivada, que se conoce comúnmente como una condición de frontera de Neumann. En el problema de la placa calentada, esto equivale a tener el flujo de calor, más que la temperatura en la frontera. Un ejemplo es la situación donde el extremo está aislado. En este caso, la derivada es cero, ya que aislar una frontera significa que el flujo de calor (y, en consecuencia, el gradiente) debe ser cero.
+
+
+Los problemas de valor frontera consisten en ecuaciones diferenciales de segundo orden cuyos datos conocidos son el valor inicial y el valor final. De esta forma, no se pueden aplicar los métodos vistos anteriormente (de valor inicial) de la forma convencional.
+
+
+
+
+	import numpy as np
+n=input('Digite el número de puntos interiores')
+n=int(n)
+x0=0
+xf=20
+yo=1
+yf=10
+h=(xf-x0)/(n+1)
+x=np.linspace(x0,xf,n+2)
+b=np.zeros(n)
+A=np.eye(n)*(h** 2-8)
+for k in range(0,n-1):
+    A[k][k+1]=-h+4
+    A[k+1][k]=h+4
+    b[k]=-h**2*x[k+1]
+b[0]=-h**2*x[1]-9*yo
+b[n-1]=-h**2*x[n]+yf
+y=np.linalg.inv(A).dot(b)
+y=np.insert(y,0,ye)
+y=np.insert(y,len(y),yf)
+for k in range(len(y)):
+    print('y(',round(x[k],4),')=',y[k])
+
+
+plt.plot(x,y)  
+  
+import numpy as np
+import matplotlib.pyplot as plt
+#datos
+L=1.
+#condiciones de frontera
+CL=1.
+#discretizacion
+N=5
+x=np.linspace(0,L,N)    
+dx=L/(N-1)
+N=5
+#sistema de ecuaciones
+A=np.zeros((N,N))
+b=np.zeros(N)
+for i in range(N):
+    if i==0:
+        A[i][i]=-1/dx**2
+        A[i][i+1]=1/dx**2
+    elif i==N-1:
+        A[i][i]=1
+        b[i]=CL
+    else:
+        A[i][i]=-2/dx **2
+        A[i][i+1]=1/dx **2
+        A[i][i-1]=1/dx **2
+
+
+Ainv=np.linalg.inv(A)
+C=np.dot(Ainv,b)
+
+
+plt.plot(x,C,'ro')
+plt.show()
+print(C)
+
+
+  
+
+	
+
+Conclusión
+Los métodos numéricos son técnicas mediante las cuales es posible formular problemas matemáticos de tal forma que puedan resolverse usando operaciones aritméticas.
+Gracias a esto los métodos numéricos podemos decir que nos facilita la manera de desarrollar los ejercicios presentados y vistos durante las clases. Así también nos vuelven aptos para entender esquemas numéricos a fin de resolver problemas matemáticos, de ingeniería y científicos en una computadora, reducir esquemas numéricos básicos, escribir programas y resolverlos en una computadora y usar correctamente el software existente para dichos métodos y no solo aumenta nuestra habilidad para el uso de computadoras sino que también amplía la pericia matemática y la comprensión de los principios científicos básicos. En base a todo lo visto y aprendido respecto a cada una de las formas de solución de los métodos sabemos que nos facilita la manera de manejarlo y poder encontrar una solución al problema y hacer que todos los desarrollos matemáticos sean menos complejos.
